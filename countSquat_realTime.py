@@ -1,7 +1,7 @@
 # import libraries
 import os
 import json
-import cv2
+import keyboard
 
 # execute OpenPoseDemo.exe
 # os.system('execute_op.bat')
@@ -19,16 +19,23 @@ lookfor_pos = False
 # parsing json data
 seriesNum = '0'
 while True:
+    if keyboard.is_pressed('q'):
+        fhandler.close()
+        break
+    
     for i in range(12 - len(seriesNum)): # adding extra 0 until there is 12 digits
         seriesNum = "0" + seriesNum
     fileName = seriesNum + '_' + 'keypoints' + '.json' # form the file name
     path = 'camera_output/' + fileName
     if os.path.isfile(path): # check if file exists
-        fhandler = open(path)
+        try: # the handler might open an empty file I dont know why, try & except are here to prevent error meg.
+            fhandler = open(path)
+        except:
+            continue
         data = json.loads(fhandler.read())
         if data['people'] != []: # doc on the json data https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/output.md
-            if data['people'][0]['pose_keypoints_2d'][3] > 0:
-                y = (data['people'][0]['pose_keypoints_2d'][2]) 
+            if data['people'][0]['pose_keypoints_2d'][26] > 0:
+                y = (data['people'][0]['pose_keypoints_2d'][25]) 
                 midHip.append(y)        
         # advance the serial number for 1
         intNum = int(seriesNum)
@@ -61,10 +68,6 @@ while True:
                     lookfor_pos = False
                     pos_count = 0
                     squat += 1
-        print("you have done",squat,"squats")
-
-    key = cv2.waitKey(1) & 0xFF # if press q stop the program
-    if key == ord("q"):
-        os.system('cmd /c "taskkill /IM OpenPoseDemo.exe /f"')
-        break
+                    print("you have done",squat,"squats")
+    
 
