@@ -1,11 +1,10 @@
-'''Every an hour, this program will force you to do 30 squats within 10 mins, failed to do so will sleep this computer'''
-
 # import libraries
 import os
 import json
 import subprocess as sp
 import time
 import shutil
+import keyboard
 
 waitTime = 0 # seconds, the interval time between the program forces you to do squats
 numOfSquats = 10 # number of squats you have to do to prevent the computer from sleeping
@@ -77,14 +76,20 @@ def countSquat(n,f):
             break
         
 # main function
-
-# go back to parental directory
-os.chdir('..')                        
-
-time.sleep(waitTime)
-# execute OpenPoseDemo.exe as it will detect and export body joints json data in folder camera_output
-sp.Popen("execute_op.bat")
-countSquat(numOfSquats,finishWithin)
-print('success!')
-os.system('taskkill /IM "OpenPoseDemo.exe" /F')
-shutil.rmtree('camera_output')
+def main():
+    # go back to parental directory
+    os.chdir('..')                        
+    while True:
+        time.sleep(waitTime)
+        # execute OpenPoseDemo.exe as it will detect and export body joints json data in folder camera_output
+        sp.Popen("execute_op.bat")
+        countSquat(numOfSquats,finishWithin)
+        print('success!')
+        os.system('taskkill /IM "OpenPoseDemo.exe" /F')
+        shutil.rmtree('camera_output')
+        if keyboard.is_pressed('q'):
+            break
+        
+if __name__ == '__main__':
+    main()
+        

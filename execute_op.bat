@@ -1,1 +1,0 @@
-bin\OpenPoseDemo.exe -write_json camera_output
